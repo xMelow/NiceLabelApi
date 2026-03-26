@@ -83,3 +83,5 @@ C:\Users\Flor\Documents\Code\NiceLabelApi\NiceLabelApi\obj\Debug\NiceLabelApi.cs
 C:\Users\Flor\Documents\Code\NiceLabelApi\NiceLabelApi\obj\Debug\NiceLabe.54DC0E98.Up2Date
 C:\Users\Flor\Documents\Code\NiceLabelApi\NiceLabelApi\obj\Debug\NiceLabelApi.dll
 C:\Users\Flor\Documents\Code\NiceLabelApi\NiceLabelApi\obj\Debug\NiceLabelApi.pdb
+C:\Users\Flor\Documents\Code\NiceLabelApi\NiceLabelApi\bin\SDK.NET.Interface.dll
+C:\Users\Flor\Documents\Code\NiceLabelApi\NiceLabelApi\bin\SDK.NET.Interface.xml

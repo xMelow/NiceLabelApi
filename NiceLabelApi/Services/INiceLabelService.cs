@@ -1,7 +1,10 @@
-﻿namespace NiceLabelApi.Services
+﻿using System.Collections.Generic;
+using System.IO;
+
+namespace NiceLabelApi.Services
 {
     public interface INiceLabelService
     {
-        
+        IReadOnlyList<string> GetVariables(Stream file);
     }
 }
