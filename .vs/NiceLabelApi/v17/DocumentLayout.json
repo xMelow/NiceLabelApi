@@ -1,0 +1,77 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|c:\\users\\flor\\documents\\code\\nicelabelapi\\nicelabelapi\\controllers\\valuescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|solutionrelative:nicelabelapi\\controllers\\valuescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\nicelabelapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|solutionrelative:nicelabelapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\nicelabelapi\\app_start\\webapiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|solutionrelative:nicelabelapi\\app_start\\webapiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 526,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ValuesController.cs",
+              "DocumentMoniker": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\Controllers\\ValuesController.cs",
+              "RelativeDocumentMoniker": "NiceLabelApi\\Controllers\\ValuesController.cs",
+              "ToolTip": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\Controllers\\ValuesController.cs",
+              "RelativeToolTip": "NiceLabelApi\\Controllers\\ValuesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T15:27:50.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "NiceLabelApi\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "NiceLabelApi\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T15:27:47.67Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WebApiConfig.cs",
+              "DocumentMoniker": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\App_Start\\WebApiConfig.cs",
+              "RelativeDocumentMoniker": "NiceLabelApi\\App_Start\\WebApiConfig.cs",
+              "ToolTip": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\App_Start\\WebApiConfig.cs",
+              "RelativeToolTip": "NiceLabelApi\\App_Start\\WebApiConfig.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T15:21:50.618Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
