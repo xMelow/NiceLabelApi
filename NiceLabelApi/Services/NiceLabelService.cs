@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using NiceLabelApi.Domain;
 
 namespace NiceLabelApi.Services
@@ -18,7 +19,7 @@ namespace NiceLabelApi.Services
             return _engine.GetVariables(label);
         }
 
-        public void PrintLabel(Stream label)
+        public void PrintLabel(Stream label, string printerIpAddress)
         {
             _engine.PrintLabel(label);
         }

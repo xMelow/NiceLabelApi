@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NiceLabel.SDK;
 
 namespace NiceLabelApi.Domain
@@ -31,6 +32,7 @@ namespace NiceLabelApi.Domain
         public void PrintLabel(Stream label)
         {
             _niceLabelPrintEngine.OpenLabel(label);
+            
         }
     }
 }

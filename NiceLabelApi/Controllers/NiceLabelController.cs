@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -12,17 +13,10 @@ namespace NiceLabelApi.Controllers
     public class NiceLabelController : ApiController
     {
         private readonly INiceLabelService _labelService;
-
+        
         public NiceLabelController()
         {
             _labelService = new NiceLabelService(new NiceLabelEngine());
-        }
-        
-        [HttpGet]
-        [Route("test")]
-        public IHttpActionResult Test()
-        {
-            return Ok("NiceLabel API is running!");
         }
         
         [HttpPost]
@@ -35,6 +29,36 @@ namespace NiceLabelApi.Controllers
             
             var variables = _labelService.GetVariables(labelFileStream);
             return Ok(variables);
+        }
+        
+        [HttpPost]
+        [Route("printLabel")]
+        public async Task<IHttpActionResult> PrintLabel()
+        {
+            var provider = new MultipartMemoryStreamProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+            var labelContent = provider.Contents
+                .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == "label");
+            var printerIpContent = provider.Contents
+                .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == "printerIp");
+
+            if (labelContent == null) return BadRequest("Label needs to be present");
+            var labelFile = await labelContent.ReadAsStreamAsync();
+            string printerIp = null;
+            
+            if (printerIpContent != null)
+                printerIp = await printerIpContent.ReadAsStringAsync();
+            
+            try
+            {
+                _labelService.PrintLabel(labelFile, printerIp);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error printing label : {ex.Message}");
+            }
+            
+            return Ok("Printing label...");
         }
     }
 }
