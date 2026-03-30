@@ -27,5 +27,10 @@ namespace NiceLabelApi.Domain
         
             return result;
         }
+
+        public void PrintLabel(Stream label)
+        {
+            _niceLabelPrintEngine.OpenLabel(label);
+        }
     }
 }

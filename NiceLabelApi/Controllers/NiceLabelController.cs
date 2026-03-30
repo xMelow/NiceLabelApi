@@ -1,6 +1,8 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.Ajax.Utilities;
 using NiceLabelApi.Domain;
 using NiceLabelApi.Services;
 
@@ -27,11 +29,11 @@ namespace NiceLabelApi.Controllers
         [Route("variables")]
         public async Task<IHttpActionResult> Variables()
         {
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
-            var file = provider.Contents[0];
-            var stream = await file.ReadAsStreamAsync();
-            var variables = _labelService.GetVariables(stream);
+            var labelFileStream = await Request.Content.ReadAsStreamAsync();
+
+            if (labelFileStream.Length == 0) return BadRequest("Body can't be empty");
+            
+            var variables = _labelService.GetVariables(labelFileStream);
             return Ok(variables);
         }
     }

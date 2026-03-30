@@ -17,6 +17,10 @@ namespace NiceLabelApi.Services
         {
             return _engine.GetVariables(label);
         }
-        
+
+        public void PrintLabel(Stream label)
+        {
+            _engine.PrintLabel(label);
+        }
     }
 }
