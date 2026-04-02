@@ -67,10 +67,10 @@ namespace NiceLabelApi.Controllers
             return Ok("Printing label...");
         }
 
-        private HttpContent GetParameterContent(MultipartMemoryStreamProvider provider, string parameterName)
+        private HttpContent GetParameterContent(MultipartMemoryStreamProvider provider, string param)
         {
             return provider.Contents
-                    .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == parameterName);
+                    .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == param);
         }
     }
 }
