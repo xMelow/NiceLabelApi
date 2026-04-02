@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Ajax.Utilities;
 using NiceLabelApi.Domain;
+using NiceLabelApi.Models;
 using NiceLabelApi.Services;
 
 namespace NiceLabelApi.Controllers
@@ -37,34 +38,37 @@ namespace NiceLabelApi.Controllers
         {
             var provider = new MultipartMemoryStreamProvider();
             await Request.Content.ReadAsMultipartAsync(provider);
-
-            var labelContent = GetParameterContent(provider, "label");
-            var printerNameContent = GetParameterContent(provider, "printerName");
-            var quantityContent = GetParameterContent(provider, "quantity");
-
-            if (labelContent == null) return BadRequest("Label needs to be present");
-            if (quantityContent == null) return BadRequest("Print quantity needs to be present");
-            
-            var labelFile = await labelContent.ReadAsStreamAsync();
-            var quantity = await quantityContent.ReadAsStringAsync();
-            string printerName = null;
-            
-            if (printerNameContent != null)
-                printerName = await printerNameContent.ReadAsStringAsync();
-            
-            if (!Int32.TryParse(quantity, out int parsedQuantity))
-                return BadRequest("Quantity must be a valid number");
-            
             try
             {
-                _labelService.PrintLabel(labelFile, parsedQuantity, printerName);
+                var printLabelRequest = await GetPrintLabelRequest(provider);
+                _labelService.PrintLabel(printLabelRequest.LabelFile, printLabelRequest.Quantity, printLabelRequest.PrinterName);
+                return Ok("Printing label...");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Error printing label : {ex.Message}");
             }
+        }
+        
+        private async Task<PrintLabelRequest> GetPrintLabelRequest(MultipartMemoryStreamProvider provider)
+        {
+            PrintLabelRequest request = new PrintLabelRequest();
             
-            return Ok("Printing label...");
+            var labelContent = GetParameterContent(provider, "label");
+            var quantityContent = GetParameterContent(provider, "quantity");
+            var printerNameContent = GetParameterContent(provider, "printerName");
+            
+            if (labelContent == null) throw new Exception("Label should be present");
+            if (quantityContent == null) throw new Exception("Quantity should be present");
+            
+            request.LabelFile = await labelContent.ReadAsStreamAsync();
+            var quantityString = await quantityContent.ReadAsStringAsync();
+            
+            if (!Int32.TryParse(quantityString, out int parsedQuantity)) throw new Exception("Quantity should be a valid number");
+            if (printerNameContent != null) request.PrinterName = await printerNameContent.ReadAsStringAsync();
+            
+            request.Quantity = parsedQuantity;
+            return request;
         }
 
         private HttpContent GetParameterContent(MultipartMemoryStreamProvider provider, string param)
