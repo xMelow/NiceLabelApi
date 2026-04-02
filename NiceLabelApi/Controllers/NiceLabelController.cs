@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -36,17 +37,23 @@ namespace NiceLabelApi.Controllers
         [Route("printLabel")]
         public async Task<IHttpActionResult> PrintLabel()
         {
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
             try
             {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
                 var printLabelRequest = await GetPrintLabelRequest(provider);
                 _labelService.PrintLabel(printLabelRequest.LabelFile, printLabelRequest.Quantity, printLabelRequest.PrinterName);
+                
                 return Ok("Printing label...");
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Error printing label : {ex.Message}");
+                return InternalServerError(ex);
             }
         }
         
@@ -58,13 +65,13 @@ namespace NiceLabelApi.Controllers
             var quantityContent = GetParameterContent(provider, "quantity");
             var printerNameContent = GetParameterContent(provider, "printerName");
             
-            if (labelContent == null) throw new Exception("Label should be present");
-            if (quantityContent == null) throw new Exception("Quantity should be present");
+            if (labelContent == null) throw new ValidationException("Label should be present");
+            if (quantityContent == null) throw new ValidationException("Quantity should be present");
             
             request.LabelFile = await labelContent.ReadAsStreamAsync();
             var quantityString = await quantityContent.ReadAsStringAsync();
             
-            if (!Int32.TryParse(quantityString, out int parsedQuantity)) throw new Exception("Quantity should be a valid number");
+            if (!Int32.TryParse(quantityString, out int parsedQuantity)) throw new ValidationException("Quantity should be a valid number");
             if (printerNameContent != null) request.PrinterName = await printerNameContent.ReadAsStringAsync();
             
             request.Quantity = parsedQuantity;

@@ -129,6 +129,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\NiceLabelController.cs" />
     <Compile Include="Domain\NiceLabelEngine.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
