@@ -7,6 +7,6 @@ namespace NiceLabelApi.Services
     public interface INiceLabelService
     {
         IReadOnlyList<string> GetVariables(Stream file);
-        void PrintLabel(Stream label, string printerIpAddress);
+        void PrintLabel(Stream label, int quantity, string printerIpAddress);
     }
 }

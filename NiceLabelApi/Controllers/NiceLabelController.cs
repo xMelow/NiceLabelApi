@@ -37,21 +37,27 @@ namespace NiceLabelApi.Controllers
         {
             var provider = new MultipartMemoryStreamProvider();
             await Request.Content.ReadAsMultipartAsync(provider);
-            var labelContent = provider.Contents
-                .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == "label");
-            var printerIpContent = provider.Contents
-                .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == "printerIp");
+
+            var labelContent = GetParameterContent(provider, "label");
+            var printerNameContent = GetParameterContent(provider, "printerName");
+            var quantityContent = GetParameterContent(provider, "quantity");
 
             if (labelContent == null) return BadRequest("Label needs to be present");
-            var labelFile = await labelContent.ReadAsStreamAsync();
-            string printerIp = null;
+            if (quantityContent == null) return BadRequest("Print quantity needs to be present");
             
-            if (printerIpContent != null)
-                printerIp = await printerIpContent.ReadAsStringAsync();
+            var labelFile = await labelContent.ReadAsStreamAsync();
+            var quantity = await quantityContent.ReadAsStringAsync();
+            string printerName = null;
+            
+            if (printerNameContent != null)
+                printerName = await printerNameContent.ReadAsStringAsync();
+            
+            if (!Int32.TryParse(quantity, out int parsedQuantity))
+                return BadRequest("Quantity must be a valid number");
             
             try
             {
-                _labelService.PrintLabel(labelFile, printerIp);
+                _labelService.PrintLabel(labelFile, parsedQuantity, printerName);
             }
             catch (Exception ex)
             {
@@ -59,6 +65,12 @@ namespace NiceLabelApi.Controllers
             }
             
             return Ok("Printing label...");
+        }
+
+        private HttpContent GetParameterContent(MultipartMemoryStreamProvider provider, string parameterName)
+        {
+            return provider.Contents
+                    .FirstOrDefault(c => c.Headers.ContentDisposition?.Name?.Trim('"') == parameterName);
         }
     }
 }

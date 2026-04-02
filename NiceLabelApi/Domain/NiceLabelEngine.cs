@@ -29,10 +29,15 @@ namespace NiceLabelApi.Domain
             return result;
         }
 
-        public void PrintLabel(Stream label)
+        public void PrintLabel(Stream labelStream, string printerIp)
         {
-            _niceLabelPrintEngine.OpenLabel(label);
+            //convert labelStream to label file name
+            ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+            if (printerIp != null)
+                label.PrintSettings.PrinterName = printerIp; // update request to use installed NiceLabel printer (nicelabel printer list) or find the printer in the list of installed printers (need printer name)
             
+            // label quantity also needs to be in the request
+            label.Print(1);
         }
     }
 }

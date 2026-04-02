@@ -19,9 +19,9 @@ namespace NiceLabelApi.Services
             return _engine.GetVariables(label);
         }
 
-        public void PrintLabel(Stream label, string printerIpAddress)
+        public void PrintLabel(Stream label, int quantity, string printerIpAddress)
         {
-            _engine.PrintLabel(label);
+            _engine.PrintLabel(label, printerIpAddress);
         }
     }
 }
