@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace NiceLabelApi.Controllers
         }
         
         [HttpPost]
-        [Route("printLabel")]
+        [Route("print")]
         public async Task<IHttpActionResult> PrintLabel()
         {
             try
