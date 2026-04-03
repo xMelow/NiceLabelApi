@@ -12,7 +12,7 @@ using NiceLabelApi.Services;
 
 namespace NiceLabelApi.Controllers
 {
-    [RoutePrefix("nicelabel")]
+    [RoutePrefix("api/nicelabel")]
     public class NiceLabelController : ApiController
     {
         private readonly INiceLabelService _labelService;

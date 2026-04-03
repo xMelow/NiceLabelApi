@@ -2,7 +2,7 @@
 
 ## Introduction
 This is an API built around the NiceLabel SDK to use in different applications.
-The NiceLabel SDK is built for .NET 4.7.2 so this API lets you use the SDK For all projects and applications.
+The NiceLabel SDK is built for .NET 4.7.2 so this API lets you use the SDK for all projects and applications.
 
 ## Requirements
 - .NET 4.7.2
@@ -21,7 +21,7 @@ The NiceLabel SDK is built for .NET 4.7.2 so this API lets you use the SDK For a
 - The API runs on port `44368` by default
 
 ## Endpoints
-These are all the endpoints of the API.
+All API endpoints.
 
 ### Variables
 Returns a list of variables from a NiceLabel label file.
