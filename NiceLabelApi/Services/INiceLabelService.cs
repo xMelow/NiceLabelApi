@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using NiceLabel.SDK;
 
 namespace NiceLabelApi.Services
 {
@@ -8,5 +9,6 @@ namespace NiceLabelApi.Services
     {
         IReadOnlyList<string> GetVariables(Stream file);
         void PrintLabel(Stream label, int quantity, string printerIpAddress);
+        List<IPrinter> GetPrinters();
     }
 }

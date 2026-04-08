@@ -7,11 +7,11 @@
       "RelativeMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|solutionrelative:nicelabelapi\\controllers\\valuescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|c:\\users\\flor\\documents\\code\\nicelabelapi\\nicelabelapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\nicelabelapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|solutionrelative:nicelabelapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|c:\\users\\flor\\documents\\code\\nicelabelapi\\nicelabelapi\\app_start\\webapiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\nicelabelapi\\app_start\\webapiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{593AB0EE-1C9A-49F3-926D-5718C2ABAFE5}|NiceLabelApi\\NiceLabelApi.csproj|solutionrelative:nicelabelapi\\app_start\\webapiconfig.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "NiceLabelApi\\Controllers\\ValuesController.cs",
               "ToolTip": "C:\\Users\\Flor\\Documents\\Code\\NiceLabelApi\\NiceLabelApi\\Controllers\\ValuesController.cs",
               "RelativeToolTip": "NiceLabelApi\\Controllers\\ValuesController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-25T15:27:50.287Z",
               "EditorCaption": ""
@@ -55,8 +55,7 @@
               "RelativeToolTip": "NiceLabelApi\\Controllers\\HomeController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-25T15:27:47.67Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-25T15:27:47.67Z"
             },
             {
               "$type": "Document",
@@ -68,8 +67,7 @@
               "RelativeToolTip": "NiceLabelApi\\App_Start\\WebApiConfig.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-25T15:21:50.618Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-25T15:21:50.618Z"
             }
           ]
         }

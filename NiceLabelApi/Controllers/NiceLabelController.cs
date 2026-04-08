@@ -57,6 +57,13 @@ namespace NiceLabelApi.Controllers
                 return InternalServerError(ex);
             }
         }
+
+        [HttpGet]
+        [Route("printers")]
+        public IHttpActionResult GetPrinters()
+        {
+            return Ok(_labelService.GetPrinters());
+        }
         
         private async Task<PrintLabelRequest> GetPrintLabelRequest(MultipartMemoryStreamProvider provider)
         {
