@@ -38,5 +38,10 @@ namespace NiceLabelApi.Domain
             
             label.Print(quantity);
         }
+
+        public List<IPrinter> GetPrinters()
+        {
+            return _niceLabelPrintEngine.Printers.ToList();
+        }
     }
 }

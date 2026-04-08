@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using NiceLabel.SDK;
 using NiceLabelApi.Domain;
 
 namespace NiceLabelApi.Services
@@ -22,6 +23,11 @@ namespace NiceLabelApi.Services
         public void PrintLabel(Stream label, int quantity, string printerIpAddress)
         {
             _engine.PrintLabel(label, quantity, printerIpAddress);
+        }
+
+        public List<IPrinter> GetPrinters()
+        {
+            return _engine.GetPrinters();
         }
     }
 }
