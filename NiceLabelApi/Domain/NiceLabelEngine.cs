@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using NiceLabel.SDK;
 
 namespace NiceLabelApi.Domain
@@ -31,8 +32,22 @@ namespace NiceLabelApi.Domain
         public void PrintLabel(Stream labelStream, int quantity, string printerName)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
-            Console.WriteLine(label.PrintSettings.PrinterName);
-            System.Diagnostics.Debug.WriteLine(label.PrintSettings.PrinterName);
+            
+            if (printerName != null)
+                label.PrintSettings.PrinterName = printerName;
+            
+            label.Print(quantity);
+        }
+        
+        public void PrintLabelVariables(Stream labelStream, Dictionary<string, string> variables, string printerName)
+        {
+            ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+            
+            // set label variables
+            
+            // set quantity to the amount of variables in the variables?
+            var quantity = 1;
+            
             if (printerName != null)
                 label.PrintSettings.PrinterName = printerName;
             

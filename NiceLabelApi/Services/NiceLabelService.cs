@@ -20,9 +20,14 @@ namespace NiceLabelApi.Services
             return _engine.GetVariables(label);
         }
 
-        public void PrintLabel(Stream label, int quantity, string printerIpAddress)
+        public void PrintLabel(Stream label, int quantity, string printerName)
         {
-            _engine.PrintLabel(label, quantity, printerIpAddress);
+            _engine.PrintLabel(label, quantity, printerName);
+        }
+
+        public void PrintLabelVariables(Stream label, Dictionary<string, string> variables, string printerName)
+        {
+            _engine.PrintLabelVariables(label, variables, printerName);
         }
 
         public List<IPrinter> GetPrinters()

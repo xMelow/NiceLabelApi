@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 using NiceLabelApi.Domain;
 using NiceLabelApi.Models;
 using NiceLabelApi.Services;
@@ -56,6 +58,33 @@ namespace NiceLabelApi.Controllers
             {
                 return InternalServerError(ex);
             }
+        }
+
+        [HttpPost]
+        [Route("printVariableData")]
+        public async Task<IHttpActionResult> SerialNumbersNewPrinters()
+        {
+            var provider = new MultipartMemoryStreamProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+            
+            var labelContent = GetParameterContent(provider, "label");
+            var variablesContent = GetParameterContent(provider, "variables");
+            var printerNameContent = GetParameterContent(provider, "printerName");
+
+            if (labelContent == null) throw new ValidationException("Label must be present");
+            if (variablesContent == null) throw new ValidationException("Variables must be present");
+
+            var label = await labelContent.ReadAsStreamAsync();
+            var variablesJson = await variablesContent.ReadAsStringAsync();
+            var variables = JsonConvert.DeserializeObject<Dictionary<string, string>>(variablesJson);
+            
+            string printerName = null;
+            if (printerNameContent != null)
+                printerName = await printerNameContent.ReadAsStringAsync();
+            
+            _labelService.PrintLabelVariables(label, variables, printerName);
+            
+            return Ok("Printing labels");
         }
 
         [HttpGet]
