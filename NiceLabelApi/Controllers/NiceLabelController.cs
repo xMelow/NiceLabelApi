@@ -61,8 +61,8 @@ namespace NiceLabelApi.Controllers
         }
 
         [HttpPost]
-        [Route("printVariableData")]
-        public async Task<IHttpActionResult> SerialNumbersNewPrinters()
+        [Route("printLabelVariables")]
+        public async Task<IHttpActionResult> PrintLabelVariables()
         {
             var provider = new MultipartMemoryStreamProvider();
             await Request.Content.ReadAsMultipartAsync(provider);

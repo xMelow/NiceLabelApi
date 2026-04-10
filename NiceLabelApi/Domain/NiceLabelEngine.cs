@@ -42,11 +42,12 @@ namespace NiceLabelApi.Domain
         public void PrintLabelVariables(Stream labelStream, Dictionary<string, string> variables, string printerName)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
-            
-            // set label variables
-            
-            // set quantity to the amount of variables in the variables?
             var quantity = 1;
+            
+            foreach (var variable in variables)
+            {
+                label.Variables[variable.Key].SetValue(variable.Value);
+            }
             
             if (printerName != null)
                 label.PrintSettings.PrinterName = printerName;
