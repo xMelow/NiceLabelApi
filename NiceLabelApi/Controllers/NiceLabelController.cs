@@ -64,27 +64,34 @@ namespace NiceLabelApi.Controllers
         [Route("printLabelVariables")]
         public async Task<IHttpActionResult> PrintLabelVariables()
         {
-            var provider = new MultipartMemoryStreamProvider();
-            await Request.Content.ReadAsMultipartAsync(provider);
-            
-            var labelContent = GetParameterContent(provider, "label");
-            var variablesContent = GetParameterContent(provider, "variables");
-            var printerNameContent = GetParameterContent(provider, "printerName");
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
 
-            if (labelContent == null) throw new ValidationException("Label must be present");
-            if (variablesContent == null) throw new ValidationException("Variables must be present");
+                var labelContent = GetParameterContent(provider, "label");
+                var variablesContent = GetParameterContent(provider, "variables");
+                var printerNameContent = GetParameterContent(provider, "printerName");
 
-            var label = await labelContent.ReadAsStreamAsync();
-            var variablesJson = await variablesContent.ReadAsStringAsync();
-            var variables = JsonConvert.DeserializeObject<Dictionary<string, string>>(variablesJson);
-            
-            string printerName = null;
-            if (printerNameContent != null)
-                printerName = await printerNameContent.ReadAsStringAsync();
-            
-            _labelService.PrintLabelVariables(label, variables, printerName);
-            
-            return Ok("Printing labels");
+                if (labelContent == null) throw new ValidationException("Label must be present");
+                if (variablesContent == null) throw new ValidationException("Variables must be present");
+
+                var label = await labelContent.ReadAsStreamAsync();
+                var variablesJson = await variablesContent.ReadAsStringAsync();
+                var variables = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(variablesJson);
+
+                string printerName = null;
+                if (printerNameContent != null)
+                    printerName = await printerNameContent.ReadAsStringAsync();
+
+                _labelService.PrintLabelVariables(label, variables, printerName);
+
+                return Ok("Printing labels");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]

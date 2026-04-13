@@ -25,7 +25,7 @@ namespace NiceLabelApi.Services
             _engine.PrintLabel(label, quantity, printerName);
         }
 
-        public void PrintLabelVariables(Stream label, Dictionary<string, string> variables, string printerName)
+        public void PrintLabelVariables(Stream label, List<Dictionary<string, string>> variables, string printerName)
         {
             _engine.PrintLabelVariables(label, variables, printerName);
         }
