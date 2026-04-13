@@ -48,20 +48,15 @@ namespace NiceLabelApi.Domain
             if (printerName != null)
                 label.PrintSettings.PrinterName = printerName;
             
-            // for each variable in variables (complete list of variables for all labels to be printed)
-            // set the label variables
-            // print label
-            // next variable
-            
-            foreach (var variable in variables)
+            foreach (var labelData in variables)
             {
-                // foreach (var labelVariable in label.Variables)
-                // {
-                //     if (labelVariable.Name == variable.Key) 
-                //         labelVariable.SetValue(variable.Value);
-                //     
-                //     label.Print(quantity);
-                // }
+                foreach (var data in labelData)
+                {
+                    label.Variables[data.Key].SetValue(data.Value);
+                }
+
+                label.PrintSettings.AppendToOutputFile = true;
+                label.Print(quantity);
             }
         }
 
