@@ -34,5 +34,10 @@ namespace NiceLabelApi.Services
         {
             return _engine.GetPrinters();
         }
+
+        public void GetLabelPreview(Stream label)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

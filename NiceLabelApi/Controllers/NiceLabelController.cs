@@ -35,6 +35,28 @@ namespace NiceLabelApi.Controllers
             var variables = _labelService.GetVariables(labelFileStream);
             return Ok(variables);
         }
+
+        [HttpPost]
+        [Route("labelPreview")]
+        public async Task<IHttpActionResult> GetLabelPreview()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var labelContent = GetParameterContent(provider, "label");
+                if (labelContent == null) throw new ValidationException("Label must be present");
+                var label = await labelContent.ReadAsStreamAsync();
+
+                _labelService.GetLabelPreview(label);
+                return Ok("Label preview");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating label preview: {ex.Message}");
+            }
+        }
         
         [HttpPost]
         [Route("print")]
