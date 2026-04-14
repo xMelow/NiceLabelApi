@@ -47,6 +47,8 @@ namespace NiceLabelApi.Domain
             
             if (printerName != null)
                 label.PrintSettings.PrinterName = printerName;
+
+            var sessionPrint = label.StartSessionPrint();
             
             foreach (var labelData in variables)
             {
@@ -54,10 +56,10 @@ namespace NiceLabelApi.Domain
                 {
                     label.Variables[data.Key].SetValue(data.Value);
                 }
-
-                label.PrintSettings.AppendToOutputFile = true;
-                label.Print(quantity);
+                
+                label.SessionPrint(quantity, sessionPrint);
             }
+            label.EndSessionPrint(sessionPrint);
         }
 
         public List<IPrinter> GetPrinters()
