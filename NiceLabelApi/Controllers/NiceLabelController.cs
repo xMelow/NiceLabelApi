@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using NiceLabelApi.Domain;
-using NiceLabelApi.Models;
 using NiceLabelApi.Services;
 
 namespace NiceLabelApi.Controllers
@@ -35,6 +35,33 @@ namespace NiceLabelApi.Controllers
             var variables = _labelService.GetVariables(labelFileStream);
             return Ok(variables);
         }
+
+        [HttpPost]
+        [Route("labelPreview")]
+        public async Task<IHttpActionResult> GetLabelPreview()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var label = await GetRequiredStream(provider, "label");
+                var width = await GetRequiredParameter<int>(provider, "width");
+                var height = await GetRequiredParameter<int>(provider, "height");
+
+                var labelPreviewBytes = _labelService.GetLabelPreview(label, width, height);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                
+                response.Content = new ByteArrayContent(labelPreviewBytes);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                
+                return ResponseMessage(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating label preview: {ex.Message}");
+            }
+        }
         
         [HttpPost]
         [Route("print")]
@@ -45,8 +72,11 @@ namespace NiceLabelApi.Controllers
                 var provider = new MultipartMemoryStreamProvider();
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                var printLabelRequest = await GetPrintLabelRequest(provider);
-                _labelService.PrintLabel(printLabelRequest.LabelFile, printLabelRequest.Quantity, printLabelRequest.PrinterName);
+                var labelFile = await GetRequiredStream(provider, "label");
+                var quantity = await GetRequiredParameter<int>(provider, "quantity");
+                var printerName = await GetOptionalParameter(provider, "printerName");
+                
+                _labelService.PrintLabel(labelFile, quantity, printerName);
                 
                 return Ok("Printing label...");
             }
@@ -69,20 +99,10 @@ namespace NiceLabelApi.Controllers
                 var provider = new MultipartMemoryStreamProvider();
                 await Request.Content.ReadAsMultipartAsync(provider);
 
-                var labelContent = GetParameterContent(provider, "label");
-                var variablesContent = GetParameterContent(provider, "variables");
-                var printerNameContent = GetParameterContent(provider, "printerName");
-
-                if (labelContent == null) throw new ValidationException("Label must be present");
-                if (variablesContent == null) throw new ValidationException("Variables must be present");
-
-                var label = await labelContent.ReadAsStreamAsync();
-                var variablesJson = await variablesContent.ReadAsStringAsync();
+                var label = await GetRequiredStream(provider, "label");
+                var variablesJson = await GetRequiredParameter<string>(provider, "variables");
+                var printerName = await GetOptionalParameter(provider, "printerName");
                 var variables = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(variablesJson);
-
-                string printerName = null;
-                if (printerNameContent != null)
-                    printerName = await printerNameContent.ReadAsStringAsync();
 
                 _labelService.PrintLabelVariables(label, variables, printerName);
 
@@ -101,25 +121,26 @@ namespace NiceLabelApi.Controllers
             return Ok(_labelService.GetPrinters());
         }
         
-        private async Task<PrintLabelRequest> GetPrintLabelRequest(MultipartMemoryStreamProvider provider)
+        private async Task<T> GetRequiredParameter<T>(MultipartMemoryStreamProvider provider, string paramName)
         {
-            PrintLabelRequest request = new PrintLabelRequest();
-            
-            var labelContent = GetParameterContent(provider, "label");
-            var quantityContent = GetParameterContent(provider, "quantity");
-            var printerNameContent = GetParameterContent(provider, "printerName");
-            
-            if (labelContent == null) throw new ValidationException("Label should be present");
-            if (quantityContent == null) throw new ValidationException("Quantity should be present");
-            
-            request.LabelFile = await labelContent.ReadAsStreamAsync();
-            var quantityString = await quantityContent.ReadAsStringAsync();
-            
-            if (!Int32.TryParse(quantityString, out int parsedQuantity)) throw new ValidationException("Quantity should be a valid number");
-            if (printerNameContent != null) request.PrinterName = await printerNameContent.ReadAsStringAsync();
-            
-            request.Quantity = parsedQuantity;
-            return request;
+            var paramContent = GetParameterContent(provider, paramName);
+            if (paramContent == null) throw new ValidationException($"{paramName} must be present");
+            var paramString = await paramContent.ReadAsStringAsync();
+            return (T)Convert.ChangeType(paramString, typeof(T));
+        }
+        
+        private async Task<Stream> GetRequiredStream(MultipartMemoryStreamProvider provider, string paramName)
+        {
+            var paramContent = GetParameterContent(provider, paramName);
+            if (paramContent == null) throw new ValidationException($"{paramName} must be present");
+            return await paramContent.ReadAsStreamAsync();
+        }
+        
+        private async Task<string> GetOptionalParameter(MultipartMemoryStreamProvider provider, string paramName)
+        {
+            var content = GetParameterContent(provider, paramName);
+            if (content == null) return null;
+            return await content.ReadAsStringAsync();
         }
 
         private HttpContent GetParameterContent(MultipartMemoryStreamProvider provider, string param)

@@ -66,5 +66,20 @@ namespace NiceLabelApi.Domain
         {
             return _niceLabelPrintEngine.Printers.ToList();
         }
+
+        public byte[] GetLabelPreview(Stream labelStream, int width, int height)
+        {
+            ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+            ILabelPreviewSettings previewSettings = new LabelPreviewSettings();
+            previewSettings.Width = width;
+            previewSettings.Height = height;
+            previewSettings.ImageFormat = "PNG";
+            var preview = label.GetLabelPreview(previewSettings);
+
+            if (preview is byte[] bytes)
+                return bytes;
+
+            throw new InvalidOperationException("Label preview does not return byte type");
+        }
     }
 }
