@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Ajax.Utilities;
@@ -49,8 +51,13 @@ namespace NiceLabelApi.Controllers
                 if (labelContent == null) throw new ValidationException("Label must be present");
                 var label = await labelContent.ReadAsStreamAsync();
 
-                _labelService.GetLabelPreview(label);
-                return Ok("Label preview");
+                var labelPreviewBytes = _labelService.GetLabelPreview(label);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                
+                response.Content = new ByteArrayContent(labelPreviewBytes);
+                response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                
+                return ResponseMessage(response);
             }
             catch (Exception ex)
             {
