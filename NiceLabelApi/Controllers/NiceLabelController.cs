@@ -49,8 +49,9 @@ namespace NiceLabelApi.Controllers
                 var width = await GetRequiredParameter<int>(provider, "width");
                 var height = await GetRequiredParameter<int>(provider, "height");
                 var previewToFile = await GetRequiredParameter<bool>(provider, "previewToFile");
+                var destination = await GetOptionalParameter(provider, "destination");
 
-                var labelPreviewBytes = _labelService.GetLabelPreview(label, width, height, previewToFile);
+                var labelPreviewBytes = _labelService.GetLabelPreview(label, width, height, previewToFile, destination);
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 
                 response.Content = new ByteArrayContent(labelPreviewBytes);
@@ -75,10 +76,7 @@ namespace NiceLabelApi.Controllers
 
                 var labelFile = await GetRequiredStream(provider, "label");
                 var quantity = await GetRequiredParameter<int>(provider, "quantity");
-                var printerNameContent = GetParameterContent(provider, "printerName");
-                
-                string printerName = null;
-                if (printerNameContent != null) printerName = await printerNameContent.ReadAsStringAsync();
+                var printerName = await GetOptionalParameter(provider, "printerName");
                 
                 _labelService.PrintLabel(labelFile, quantity, printerName);
                 
@@ -105,12 +103,8 @@ namespace NiceLabelApi.Controllers
 
                 var label = await GetRequiredStream(provider, "label");
                 var variablesJson = await GetRequiredParameter<string>(provider, "variables");
-                var printerNameContent = GetParameterContent(provider, "printerName");
+                var printerName = await GetOptionalParameter(provider, "printerName");
                 var variables = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(variablesJson);
-
-                string printerName = null;
-                if (printerNameContent != null)
-                    printerName = await printerNameContent.ReadAsStringAsync();
 
                 _labelService.PrintLabelVariables(label, variables, printerName);
 
@@ -142,6 +136,13 @@ namespace NiceLabelApi.Controllers
             var paramContent = GetParameterContent(provider, paramName);
             if (paramContent == null) throw new ValidationException($"{paramName} must be present");
             return await paramContent.ReadAsStreamAsync();
+        }
+        
+        private async Task<string> GetOptionalParameter(MultipartMemoryStreamProvider provider, string paramName)
+        {
+            var content = GetParameterContent(provider, paramName);
+            if (content == null) return null;
+            return await content.ReadAsStringAsync();
         }
 
         private HttpContent GetParameterContent(MultipartMemoryStreamProvider provider, string param)

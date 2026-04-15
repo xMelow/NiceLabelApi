@@ -67,7 +67,7 @@ namespace NiceLabelApi.Domain
             return _niceLabelPrintEngine.Printers.ToList();
         }
 
-        public byte[] GetLabelPreview(Stream labelStream, int width, int height, bool previewToFile)
+        public byte[] GetLabelPreview(Stream labelStream, int width, int height, bool previewToFile, string destination)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
             ILabelPreviewSettings previewSettings = new LabelPreviewSettings();
@@ -75,6 +75,7 @@ namespace NiceLabelApi.Domain
             previewSettings.Height = height;
             previewSettings.PreviewToFile = previewToFile;
             previewSettings.ImageFormat = "PNG";
+            previewSettings.Destination = destination;
             var preview = label.GetLabelPreview(previewSettings);
 
             if (preview is byte[] bytes)

@@ -35,9 +35,9 @@ namespace NiceLabelApi.Services
             return _engine.GetPrinters();
         }
 
-        public byte[] GetLabelPreview(Stream label, int width, int height, bool previewToFile)
+        public byte[] GetLabelPreview(Stream label, int width, int height, bool previewToFile, string destination)
         {
-            return _engine.GetLabelPreview(label, width, height, previewToFile);
+            return _engine.GetLabelPreview(label, width, height, previewToFile, destination);
         }
     }
 }
