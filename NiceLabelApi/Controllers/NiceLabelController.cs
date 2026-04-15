@@ -48,10 +48,8 @@ namespace NiceLabelApi.Controllers
                 var label = await GetRequiredStream(provider, "label");
                 var width = await GetRequiredParameter<int>(provider, "width");
                 var height = await GetRequiredParameter<int>(provider, "height");
-                var previewToFile = await GetRequiredParameter<bool>(provider, "previewToFile");
-                var destination = await GetOptionalParameter(provider, "destination");
 
-                var labelPreviewBytes = _labelService.GetLabelPreview(label, width, height, previewToFile, destination);
+                var labelPreviewBytes = _labelService.GetLabelPreview(label, width, height);
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 
                 response.Content = new ByteArrayContent(labelPreviewBytes);
