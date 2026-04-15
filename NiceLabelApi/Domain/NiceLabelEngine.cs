@@ -71,6 +71,8 @@ namespace NiceLabelApi.Domain
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
             ILabelPreviewSettings previewSettings = new LabelPreviewSettings();
+            previewSettings.Width = 100;
+            previewSettings.Height = 100;
             previewSettings.PreviewToFile = false;
             previewSettings.ImageFormat = "PNG";
             var preview = label.GetLabelPreview(previewSettings);
