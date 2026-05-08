@@ -50,12 +50,38 @@ namespace NiceLabelApi.Controllers
                 var height = await GetRequiredParameter<int>(provider, "height");
 
                 var labelPreviewBytes = _labelService.GetLabelPreview(label, width, height);
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                
-                response.Content = new ByteArrayContent(labelPreviewBytes);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(labelPreviewBytes)
+                };
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
                 
                 return ResponseMessage(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error creating label preview: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        [Route("labelPreviewBatch")]
+        public async Task<IHttpActionResult> GetLabelPreviewBatch()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var label = await GetRequiredStream(provider, "label");
+                var variablesJson = await GetRequiredParameter<string>(provider, "variables");
+                var variables = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(variablesJson);
+
+                var labelPreviewBytes = _labelService.GetLabelPreviewBatch(label, variables);
+
+                var base64Images = labelPreviewBytes.Select(b => Convert.ToBase64String(b)).ToList();
+                
+                return Ok(base64Images);
             }
             catch (Exception ex)
             {

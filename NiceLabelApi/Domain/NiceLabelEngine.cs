@@ -70,16 +70,44 @@ namespace NiceLabelApi.Domain
         public byte[] GetLabelPreview(Stream labelStream, int width, int height)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
-            ILabelPreviewSettings previewSettings = new LabelPreviewSettings();
-            previewSettings.Width = width;
-            previewSettings.Height = height;
-            previewSettings.ImageFormat = "PNG";
+            ILabelPreviewSettings previewSettings = new LabelPreviewSettings
+            {
+                Width = width,
+                Height = height,
+                ImageFormat = "PNG"
+            };
             var preview = label.GetLabelPreview(previewSettings);
 
             if (preview is byte[] bytes)
                 return bytes;
 
             throw new InvalidOperationException("Label preview does not return byte type");
+        }
+
+        public List<byte[]> GetLabelPreviewBatch(Stream labelStream, List<Dictionary<string,string>> variables)
+        {
+            List<byte[]> result = [];
+            ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+
+            IPrintToGraphicsSettings printToGraphicsSettings = new PrintToGraphicsSettings
+            {
+                PrintToFiles = false,
+                ImageFormat = "PNG",
+                Quantity = 1
+            };
+
+            foreach (var labelData in variables)
+            {
+                foreach (var data in labelData)
+                {
+                    label.Variables[data.Key].SetValue(data.Value);
+                }
+
+                IPrintToGraphicsResult printToGraphicsResult = label.PrintToGraphics(printToGraphicsSettings);
+                result.Add(printToGraphicsResult.FrontSides[0]);
+            }
+
+            return result;
         }
     }
 }
