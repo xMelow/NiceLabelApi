@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using Microsoft.Ajax.Utilities;
 using NiceLabel.SDK;
 
 namespace NiceLabelApi.Domain
@@ -86,27 +87,37 @@ namespace NiceLabelApi.Domain
 
         public List<byte[]> GetLabelPreviewBatch(Stream labelStream, List<Dictionary<string,string>> variables)
         {
-            List<byte[]> result = [];
-            ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
-
-            IPrintToGraphicsSettings printToGraphicsSettings = new PrintToGraphicsSettings
+            List<byte[]> result = new List<byte[]>();
+            using (var label = _niceLabelPrintEngine.OpenLabel(labelStream))
             {
-                PrintToFiles = false,
-                ImageFormat = "PNG",
-                Quantity = 1
-            };
-
-            foreach (var labelData in variables)
-            {
-                foreach (var data in labelData)
+                IPrintToGraphicsSettings printToGraphicsSettings = new PrintToGraphicsSettings
                 {
-                    label.Variables[data.Key].SetValue(data.Value);
+                    PrintToFiles = false,
+                    ImageFormat = "PNG",
+                    Quantity = 1
+                };
+                
+                foreach (var labelData in variables)
+                {
+                    foreach (var data in labelData)
+                    {
+                        if (!label.Variables.Any(e => e.Name == data.Key))
+                            throw new InvalidOperationException($"Variable '{data.Key}' does not exist in the label template.");
+                    
+                        label.Variables[data.Key].SetValue(data.Value);
+                    }
+
+                    IPrintToGraphicsResult printToGraphicsResult = label.PrintToGraphics(printToGraphicsSettings);
+                
+                    if (printToGraphicsResult.FrontSides == null || printToGraphicsResult.FrontSides.Count == 0)
+                        throw new InvalidOperationException("PrintToGraphics returned no sides.");
+
+                    if (printToGraphicsResult.FrontSides[0] is byte[] bytes)
+                        result.Add(bytes);
+                    else 
+                        throw new InvalidOperationException("label preview does not return bytes");
                 }
-
-                IPrintToGraphicsResult printToGraphicsResult = label.PrintToGraphics(printToGraphicsSettings);
-                result.Add(printToGraphicsResult.FrontSides[0]);
             }
-
             return result;
         }
     }
