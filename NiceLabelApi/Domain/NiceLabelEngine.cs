@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Threading.Tasks;
 using Microsoft.Ajax.Utilities;
 using NiceLabel.SDK;
 
@@ -88,13 +89,13 @@ namespace NiceLabelApi.Domain
         public List<byte[]> GetLabelPreviewBatch(Stream labelStream, List<Dictionary<string,string>> variables)
         {
             List<byte[]> result = new List<byte[]>();
+            
             using (var label = _niceLabelPrintEngine.OpenLabel(labelStream))
             {
-                IPrintToGraphicsSettings printToGraphicsSettings = new PrintToGraphicsSettings
+                ILabelPreviewSettings labelPreviewSettings = new LabelPreviewSettings
                 {
-                    PrintToFiles = false,
                     ImageFormat = "PNG",
-                    Quantity = 1
+                    UseDefaultSize = true
                 };
                 
                 foreach (var labelData in variables)
@@ -107,12 +108,9 @@ namespace NiceLabelApi.Domain
                         label.Variables[data.Key].SetValue(data.Value);
                     }
 
-                    IPrintToGraphicsResult printToGraphicsResult = label.PrintToGraphics(printToGraphicsSettings);
+                    var preview = label.GetLabelPreview(labelPreviewSettings);
                 
-                    if (printToGraphicsResult.FrontSides == null || printToGraphicsResult.FrontSides.Count == 0)
-                        throw new InvalidOperationException("PrintToGraphics returned no sides.");
-
-                    if (printToGraphicsResult.FrontSides[0] is byte[] bytes)
+                    if (preview is byte[] bytes)
                         result.Add(bytes);
                     else 
                         throw new InvalidOperationException("label preview does not return bytes");
