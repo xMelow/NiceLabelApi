@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Threading.Tasks;
+using Microsoft.Ajax.Utilities;
 using NiceLabel.SDK;
 
 namespace NiceLabelApi.Domain
@@ -70,16 +72,51 @@ namespace NiceLabelApi.Domain
         public byte[] GetLabelPreview(Stream labelStream, int width, int height)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
-            ILabelPreviewSettings previewSettings = new LabelPreviewSettings();
-            previewSettings.Width = width;
-            previewSettings.Height = height;
-            previewSettings.ImageFormat = "PNG";
+            ILabelPreviewSettings previewSettings = new LabelPreviewSettings
+            {
+                Width = width,
+                Height = height,
+                ImageFormat = "PNG"
+            };
             var preview = label.GetLabelPreview(previewSettings);
 
             if (preview is byte[] bytes)
                 return bytes;
 
             throw new InvalidOperationException("Label preview does not return byte type");
+        }
+
+        public List<byte[]> GetLabelPreviewBatch(Stream labelStream, List<Dictionary<string,string>> variables)
+        {
+            List<byte[]> result = new List<byte[]>();
+            
+            using (var label = _niceLabelPrintEngine.OpenLabel(labelStream))
+            {
+                ILabelPreviewSettings labelPreviewSettings = new LabelPreviewSettings
+                {
+                    ImageFormat = "PNG",
+                    UseDefaultSize = true
+                };
+                
+                foreach (var labelData in variables)
+                {
+                    foreach (var data in labelData)
+                    {
+                        if (!label.Variables.Any(e => e.Name == data.Key))
+                            throw new InvalidOperationException($"Variable '{data.Key}' does not exist in the label template.");
+                    
+                        label.Variables[data.Key].SetValue(data.Value);
+                    }
+
+                    var preview = label.GetLabelPreview(labelPreviewSettings);
+                
+                    if (preview is byte[] bytes)
+                        result.Add(bytes);
+                    else 
+                        throw new InvalidOperationException("label preview does not return bytes");
+                }
+            }
+            return result;
         }
     }
 }

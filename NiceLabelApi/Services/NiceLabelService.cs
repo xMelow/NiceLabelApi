@@ -39,5 +39,10 @@ namespace NiceLabelApi.Services
         {
             return _engine.GetLabelPreview(label, width, height);
         }
+
+        public List<byte[]> GetLabelPreviewBatch(Stream label, List<Dictionary<string,string>> variables)
+        {
+            return _engine.GetLabelPreviewBatch(label, variables);
+        }
     }
 }
