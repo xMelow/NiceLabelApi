@@ -25,7 +25,7 @@ namespace NiceLabelApi.Services
             _engine.PrintLabel(label, quantity, printerName);
         }
 
-        public void PrintLabelVariables(Stream label, List<Dictionary<string, string>> variables, string printerName)
+        public void PrintVariableLabel(Stream label, List<Dictionary<string, string>> variables, string printerName)
         {
             _engine.PrintLabelVariables(label, variables, printerName);
         }
@@ -43,6 +43,11 @@ namespace NiceLabelApi.Services
         public List<byte[]> GetLabelPreviewBatch(Stream label, List<Dictionary<string,string>> variables)
         {
             return _engine.GetLabelPreviewBatch(label, variables);
+        }
+
+        public void PrintLabelWithSettings(Stream label, Dictionary<string, string> variables, string printerName)
+        {
+            _engine.PrintLabelWithSettings(label, variables, printerName);
         }
     }
 }

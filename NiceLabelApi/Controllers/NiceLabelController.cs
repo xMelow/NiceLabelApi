@@ -90,7 +90,7 @@ namespace NiceLabelApi.Controllers
         }
         
         [HttpPost]
-        [Route("print")]
+        [Route("printLabel")]
         public async Task<IHttpActionResult> PrintLabel()
         {
             try
@@ -117,8 +117,8 @@ namespace NiceLabelApi.Controllers
         }
 
         [HttpPost]
-        [Route("printLabelVariables")]
-        public async Task<IHttpActionResult> PrintLabelVariables()
+        [Route("printVariableLabel")]
+        public async Task<IHttpActionResult> PrintVariableLabel()
         {
             try
             {
@@ -130,7 +130,31 @@ namespace NiceLabelApi.Controllers
                 var printerName = await GetOptionalParameter(provider, "printerName");
                 var variables = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(variablesJson);
 
-                _labelService.PrintLabelVariables(label, variables, printerName);
+                _labelService.PrintVariableLabel(label, variables, printerName);
+
+                return Ok("Printing labels");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPost]
+        [Route("printLabelWithSettings")]
+        public async Task<IHttpActionResult> PrintLabelWithSettings()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var label = await GetRequiredStream(provider, "label");
+                var variablesJson = await GetRequiredParameter<string>(provider, "variables");
+                var printerName = await GetOptionalParameter(provider, "printerName");
+                var variables = JsonConvert.DeserializeObject<Dictionary<string, string>>(variablesJson);
+
+                _labelService.PrintLabelWithSettings(label, variables, printerName);
 
                 return Ok("Printing labels");
             }

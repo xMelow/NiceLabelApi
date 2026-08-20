@@ -9,9 +9,10 @@ namespace NiceLabelApi.Services
     {
         IReadOnlyList<string> GetVariables(Stream file);
         void PrintLabel(Stream label, int quantity, string printerIpAddress);
-        void PrintLabelVariables(Stream label, List<Dictionary<string, string>> variables, string printerName);
+        void PrintVariableLabel(Stream label, List<Dictionary<string, string>> variables, string printerName);
         List<IPrinter> GetPrinters();
         byte[] GetLabelPreview(Stream label, int width, int height);
         List<byte[]> GetLabelPreviewBatch(Stream label, List<Dictionary<string,string>> variables);
+        void PrintLabelWithSettings(Stream label, Dictionary<string, string> variables, string printerName);
     }
 }

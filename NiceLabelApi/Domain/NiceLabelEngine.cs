@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
@@ -117,6 +118,11 @@ namespace NiceLabelApi.Domain
                 }
             }
             return result;
+        }
+        
+        public void PrintLabelWithSettings(Stream labelStream, Dictionary<string, string> printSettings, string printerName)
+        {
+            throw new NotImplementedException();
         }
     }
 }
