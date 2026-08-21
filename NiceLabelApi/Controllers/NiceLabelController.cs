@@ -150,11 +150,11 @@ namespace NiceLabelApi.Controllers
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 var label = await GetRequiredStream(provider, "label");
-                var variablesJson = await GetRequiredParameter<string>(provider, "variables");
+                var printSettingsJson = await GetRequiredParameter<string>(provider, "printSettings");
                 var printerName = await GetOptionalParameter(provider, "printerName");
-                var variables = JsonConvert.DeserializeObject<Dictionary<string, string>>(variablesJson);
+                var printSettings = JsonConvert.DeserializeObject<Dictionary<string, string>>(printSettingsJson);
 
-                _labelService.PrintLabelWithSettings(label, variables, printerName);
+                _labelService.PrintLabelWithSettings(label, printSettings, printerName);
 
                 return Ok("Printing labels");
             }

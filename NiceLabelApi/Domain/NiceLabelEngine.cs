@@ -122,7 +122,17 @@ namespace NiceLabelApi.Domain
         
         public void PrintLabelWithSettings(Stream labelStream, Dictionary<string, string> printSettings, string printerName)
         {
-            throw new NotImplementedException();
+            ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+            var quantity = 1;
+            
+            label.PrintSettings.PrinterName = printerName;
+            
+            foreach (var setting in printSettings)
+            {
+                label.PrintSettings.SetParameter(setting.Key, setting.Value);
+            }
+            
+            label.Print(quantity);
         }
     }
 }

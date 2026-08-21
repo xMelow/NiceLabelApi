@@ -13,6 +13,6 @@ namespace NiceLabelApi.Services
         List<IPrinter> GetPrinters();
         byte[] GetLabelPreview(Stream label, int width, int height);
         List<byte[]> GetLabelPreviewBatch(Stream label, List<Dictionary<string,string>> variables);
-        void PrintLabelWithSettings(Stream label, Dictionary<string, string> variables, string printerName);
+        void PrintLabelWithSettings(Stream label, Dictionary<string, string> printSettings, string printerName);
     }
 }
