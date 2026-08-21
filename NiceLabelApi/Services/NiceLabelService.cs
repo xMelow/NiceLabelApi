@@ -45,9 +45,9 @@ namespace NiceLabelApi.Services
             return _engine.GetLabelPreviewBatch(label, variables);
         }
 
-        public void PrintLabelWithSettings(Stream label, Dictionary<string, string> printSettings, string printerName)
+        public void PrintLabelWithSettings(Stream label, Dictionary<string, string> labelVariables, Dictionary<string, string> printSettings, string printerName)
         {
-            _engine.PrintLabelWithSettings(label, printSettings, printerName);
+            _engine.PrintLabelWithSettings(label, labelVariables, printSettings, printerName);
         }
     }
 }

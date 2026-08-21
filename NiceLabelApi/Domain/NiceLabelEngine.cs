@@ -120,18 +120,20 @@ namespace NiceLabelApi.Domain
             return result;
         }
         
-        public void PrintLabelWithSettings(Stream labelStream, Dictionary<string, string> printSettings, string printerName)
+        public void PrintLabelWithSettings(Stream labelStream, Dictionary<string, string> labelVariables, Dictionary<string, string> printSettings, string printerName)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+            var variablesList = string.Join("\n", labelVariables.Select(kvp => $"{kvp.Key}={kvp.Value}"));
             var quantity = 1;
             
             label.PrintSettings.PrinterName = printerName;
+            label.SetVariableValues(variablesList, true);
             
             foreach (var setting in printSettings)
             {
                 label.PrintSettings.SetParameter(setting.Key, setting.Value);
             }
-            
+
             label.Print(quantity);
         }
     }
