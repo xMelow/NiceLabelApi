@@ -165,6 +165,34 @@ namespace NiceLabelApi.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+        
+        [HttpPost]
+        [Route("printLabelsOutputFile")]
+        public async Task<IHttpActionResult> PrintLabelsOutputFile()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+                
+                var labelsJson = await GetRequiredParameter<string>(provider, "labels");
+                var labels = JsonConvert.DeserializeObject<List<Stream>>(labelsJson);
+                var variablesJson = await GetRequiredParameter<string>(provider, "variables");
+                var printerName = await GetOptionalParameter(provider, "printerName");
+                var variables = JsonConvert.DeserializeObject<Dictionary<string, string>>(variablesJson);
+                var outputFileName = await GetRequiredParameter<string>(provider, "outputFileName");
+                var appendToFile = await GetRequiredParameter<bool>(provider, "appendToFile");
+
+                _labelService.PrintLabelsOutputFile(labels, variables, printerName, outputFileName, appendToFile);
+
+                return Ok("Printing labels");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
 
         [HttpGet]
         [Route("printers")]

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
-using Microsoft.Ajax.Utilities;
 using NiceLabel.SDK;
 
 namespace NiceLabelApi.Domain
@@ -129,12 +124,39 @@ namespace NiceLabelApi.Domain
             label.PrintSettings.PrinterName = printerName;
             label.SetVariableValues(variablesList, true);
             
+            // PrintSpeed only accepts whole-number strings: decimals (e.g. "1.5") are silently
+            // ignored (driver keeps its previous speed) rather than erroring, even though the
+            // printer driver itself supports fractional speeds via its own Preferences dialog.
             foreach (var setting in printSettings)
             {
                 label.PrintSettings.SetParameter(setting.Key, setting.Value);
             }
 
             label.Print(quantity);
+        }
+
+        // print labels output file
+        public void PrintLabelsOutputFile(List<Stream> labels, Dictionary<string, string> variables, string printerName, string outputFileName, bool appendToFile)
+        {
+            // loop over the labels and open the labels
+            // assign variables to the labels
+            // print the labels
+            // append the second label to the first does this need to be param?
+
+            foreach (var labelStream in labels)
+            {
+                // if label does not have variables does this throw error?
+                // or does not have variables defined in the dictionary
+                ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+                var variablesList = string.Join("\n", variables.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+                label.SetVariableValues(variablesList, true);
+                if (appendToFile)
+                {
+                    label.PrintSettings.OutputFileName = outputFileName;
+                    label.PrintSettings.AppendToOutputFile = true;
+                }
+                label.Print(1);
+            }
         }
     }
 }
