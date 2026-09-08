@@ -50,10 +50,9 @@ namespace NiceLabelApi.Services
             _engine.PrintLabelWithSettings(label, labelVariables, printSettings, printerName);
         }
 
-        public void PrintLabelsOutputFile(List<Stream> labels, Dictionary<string, string> variables, string outputFileName,
-            bool appendToFile)
+        public void PrintToPdf(List<Stream> labels, Dictionary<string, string> variables, string outputFileName, bool appendToFile)
         {
-            _engine.PrintLabelsOutputFile(labels, variables, outputFileName, appendToFile);
+            _engine.PrintToPdf(labels, variables, outputFileName, appendToFile);
         }
     }
 }

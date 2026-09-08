@@ -134,7 +134,7 @@ namespace NiceLabelApi.Domain
             label.Print(quantity);
         }
 
-        public void PrintLabelsOutputFile(List<Stream> labels, Dictionary<string, string> variables, string outputFileName, bool appendToFile)
+        public void PrintToPdf(List<Stream> labels, Dictionary<string, string> variables, string outputFileName, bool appendToFile)
         {
             foreach (var labelStream in labels)
             {

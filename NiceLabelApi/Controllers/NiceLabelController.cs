@@ -170,8 +170,8 @@ namespace NiceLabelApi.Controllers
         }
         
         [HttpPost]
-        [Route("printLabelsOutputFile")]
-        public async Task<IHttpActionResult> PrintLabelsOutputFile()
+        [Route("printToPdf")]
+        public async Task<IHttpActionResult> PrintToPdf()
         {
             try
             {
@@ -184,7 +184,7 @@ namespace NiceLabelApi.Controllers
                 var outputFileName = await GetRequiredParameter<string>(provider, "outputFileName");
                 var appendToFile = await GetRequiredParameter<bool>(provider, "appendToFile");
 
-                _labelService.PrintLabelsOutputFile(labels, variables, outputFileName, appendToFile);
+                _labelService.PrintToPdf(labels, variables, outputFileName, appendToFile);
 
                 return Ok("Printing labels");
             }
