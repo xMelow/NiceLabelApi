@@ -132,8 +132,9 @@ namespace NiceLabelApi.Controllers
                 var variablesJson = await GetRequiredParameter<string>(provider, "variables");
                 var printerName = await GetOptionalParameter(provider, "printerName");
                 var variables = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(variablesJson);
+                var amount = await GetRequiredParameter<int>(provider, "amount");
 
-                _labelService.PrintVariableLabel(label, variables, printerName);
+                _labelService.PrintVariableLabel(label, variables, printerName, amount);
 
                 return Ok("Printing labels");
             }
@@ -194,6 +195,33 @@ namespace NiceLabelApi.Controllers
                 return BadRequest(message);
             }
         }
+        
+        [HttpPost]
+        [Route("printLabelBatch")]
+        public async Task<IHttpActionResult> PrintLabelBatch()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+                
+                var labels = await GetRequiredStreams(provider, "labels");
+                var variablesJson = await GetRequiredParameter<string>(provider, "variables");
+                var variables = JsonConvert.DeserializeObject<Dictionary<string, string>>(variablesJson);
+                var printerSettingsJson = await GetRequiredParameter<string>(provider, "printerSettings");
+                var printerSettings = JsonConvert.DeserializeObject<Dictionary<string, string>>(printerSettingsJson);
+                var printerName = await GetOptionalParameter(provider, "printerName");
+
+                _labelService.PrintLabelBatch(labels, variables, printerSettings, printerName);
+
+                return Ok("Printing labels");
+            }
+            catch (Exception ex)
+            {
+                var message = ex.InnerException?.Message ?? ex.Message;
+                return BadRequest(message);
+            }
+        }
 
         [HttpGet]
         [Route("printers")]
@@ -216,10 +244,7 @@ namespace NiceLabelApi.Controllers
             if (paramContent == null) throw new ValidationException($"{paramName} must be present");
             return await paramContent.ReadAsStreamAsync();
         }
-
-        // Reads every multipart part named `paramName` as a stream — use this when
-        // the client sends multiple files under the same field name (e.g. several
-        // "labels" parts), instead of a single "label" part.
+        
         private async Task<List<Stream>> GetRequiredStreams(MultipartMemoryStreamProvider provider, string paramName)
         {
             var contents = provider.Contents

@@ -38,10 +38,9 @@ namespace NiceLabelApi.Domain
             label.Print(quantity);
         }
         
-        public void PrintLabelVariables(Stream labelStream, List<Dictionary<string, string>> variables, string printerName)
+        public void PrintLabelVariables(Stream labelStream, List<Dictionary<string, string>> variables, string printerName, int amount)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
-            var quantity = 1;
             
             if (printerName != null)
                 label.PrintSettings.PrinterName = printerName;
@@ -55,7 +54,7 @@ namespace NiceLabelApi.Domain
                     label.Variables[data.Key].SetValue(data.Value);
                 }
                 
-                label.SessionPrint(quantity, sessionPrint);
+                label.SessionPrint(amount, sessionPrint);
             }
             label.EndSessionPrint(sessionPrint);
         }
@@ -150,6 +149,23 @@ namespace NiceLabelApi.Domain
                     label.PrintSettings.AppendToOutputFile = true;
                 }
 
+                label.Print(1);
+            }
+        }
+        
+        public void PrintLabelBatch(List<Stream> labels, Dictionary<string, string> variables, Dictionary<string, string> printerSettings, string printerName)
+        {
+            foreach (var labelStream in labels)
+            {
+                ILabel label = _niceLabelPrintEngine.OpenLabel(labelStream);
+                var variablesList = string.Join("\n", variables.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+                label.SetVariableValues(variablesList, true);
+                foreach (var setting in printerSettings)
+                {
+                    label.PrintSettings.SetParameter(setting.Key, setting.Value);
+                }
+                label.PrintSettings.PrinterName = printerName;
+                
                 label.Print(1);
             }
         }
