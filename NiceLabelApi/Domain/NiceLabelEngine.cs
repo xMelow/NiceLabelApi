@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NiceLabel.SDK;
+using NiceLabelApi.DTO;
 
 namespace NiceLabelApi.Domain
 {
