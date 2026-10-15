@@ -230,7 +230,7 @@ namespace NiceLabelApi.Controllers
             return Ok(_labelService.GetPrinters());
         }
         
-        [HttpGet]
+        [HttpPost]
         [Route("getLabelDetails")]
         public async Task<IHttpActionResult> GetLabelDetails()
         {
@@ -246,7 +246,7 @@ namespace NiceLabelApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.ToString());
+                return BadRequest("Error at: " + ex.Message + " | " + ex.StackTrace);
             }
         }
         

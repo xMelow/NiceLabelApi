@@ -174,35 +174,57 @@ namespace NiceLabelApi.Domain
         public NiceLabelLabel GetLabelDetails(Stream file)
         {
             ILabel label = _niceLabelPrintEngine.OpenLabel(file);
-            var labelVariables = new List<string>();
-            var labelFunctions = new List<string>();
-            var labelObjects = new List<string>();
-            var labelDatasetFields = new List<string>();
             
-            foreach (var labelVariable in label.Variables)
+            var labelVariables = new List<string>();
+            if (label.Variables != null)
             {
-                Console.WriteLine(labelVariable);
-                labelVariables.Add(labelVariable.ToString());
+                labelVariables = label.Variables.Select(labelVariable => labelVariable.Name).ToList();
             }
 
-            foreach (var labelFunction in label.Functions)
+            var labelFunctions = new List<string>();
+            if (label.Functions != null)
             {
-                Console.WriteLine(labelFunction);
-                labelFunctions.Add(labelFunction.ToString());
-            }
-            foreach (var labelObject in label.LabelObjects)
-            {
-                Console.WriteLine(labelObject);
-                labelObjects.Add(labelObject.ToString());
+                labelFunctions = label.Functions.Select(labelFunction => labelFunction.Name).ToList();
             }
 
-            if (label.DataSets.Count == 1)
+            var labelObjects = new List<string>();
+            if (label.LabelObjects != null)
+            {
+                labelObjects = label.LabelObjects.Select(labelObject => labelObject.Name).ToList();
+            }
+
+            var labelConversionIssues = (label.ConversionIssues ?? new List<string>())
+                .Select(issue => issue.ToString())
+                .ToList();
+
+            // multiple dataSets needs to be implemented
+            var labelDatasetFields = new List<string>();
+            if (label.DataSets != null && label.DataSets.Count == 1)
             {
                 foreach (var datasetField in label.DataSets[0].Fields)
                 {
-                    Console.WriteLine(datasetField);
-                    labelDatasetFields.Add(datasetField.ToString());
+                    Console.WriteLine(datasetField.FieldName);
+                    labelDatasetFields.Add(datasetField.FieldName);
                 }
+            }
+            else
+            {
+                labelDatasetFields = null;
+            }
+            
+            NiceLabelDataSet labelDataset = null;
+            if (label.DataSets != null && label.DataSets.Count == 1)
+            {
+                labelDataset = new NiceLabelDataSet
+                {
+                    IsFileDatabase = label.DataSets[0].IsFileDatabase,
+                    FileDatabaseFileName = label.DataSets[0].FileDatabaseFileName,
+                    ConnectionString = label.DataSets[0].ConnectionString,
+                    TableName = label.DataSets[0].TableName,
+                    IsCustomSql = label.DataSets[0].IsCustomSql,
+                    CustomSql = label.DataSets[0].CustomSql,
+                    Fields = labelDatasetFields
+                };
             }
 
             return new NiceLabelLabel
@@ -227,20 +249,11 @@ namespace NiceLabelApi.Domain
                         VerticalRadius = label.LabelSettings.PageLayout.VerticalRadius
                     }
                 },
-                ConversionIssues = label.ConversionIssues.ToList(),
+                ConversionIssues = labelConversionIssues,
                 Variables = labelVariables,
                 Functions = labelFunctions,
                 LabelObjects = labelObjects,
-                DataSet = new NiceLabelDataSet
-                {
-                    IsFileDatabase = label.DataSets[0].IsFileDatabase,
-                    FileDatabaseFileName = label.DataSets[0].FileDatabaseFileName,
-                    ConnectionString = label.DataSets[0].ConnectionString,
-                    TableName = label.DataSets[0].TableName,
-                    IsCustomSql = label.DataSets[0].IsCustomSql,
-                    CustomSql = label.DataSets[0].CustomSql,
-                    Fields = labelDatasetFields
-                },
+                DataSet = labelDataset,
                 FilePath = label.FilePath,
                 Author = label.Author,
                 Title = label.Title
