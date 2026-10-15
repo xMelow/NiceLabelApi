@@ -9,7 +9,7 @@ namespace NiceLabelApi.DTO
         public List<string> Variables { get; set; }
         public List<string> Functions { get; set; }
         public List<string> LabelObjects { get; set; }
-        public NiceLabelDataSet DataSet { get; set; }
+        public List<NiceLabelDataSet> DataSet { get; set; }
         public string FilePath { get; set; }
         public string Author { get; set; }
         public string Title { get; set; }
@@ -22,6 +22,7 @@ namespace NiceLabelApi.DTO
         public string OriginalPrinterName { get; set; }
         public string OriginalPrinterDriver { get; set; }
         public NiceLabelLabelPageLayout PageLayout { get; set; }
+        public int DimensionUnit { get; set; }
     }
 
     public class NiceLabelLabelPageLayout

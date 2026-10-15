@@ -246,7 +246,7 @@ namespace NiceLabelApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest("Error at: " + ex.Message + " | " + ex.StackTrace);
+                return BadRequest(ex.Message);
             }
         }
         
