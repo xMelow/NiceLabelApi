@@ -171,9 +171,80 @@ namespace NiceLabelApi.Domain
             }
         }
         
-        public NiceLabelLabel GetLabelDetails(Stream label)
+        public NiceLabelLabel GetLabelDetails(Stream file)
         {
-            throw new NotImplementedException();
+            ILabel label = _niceLabelPrintEngine.OpenLabel(file);
+            var labelVariables = new List<string>();
+            var labelFunctions = new List<string>();
+            var labelObjects = new List<string>();
+            var labelDatasetFields = new List<string>();
+            
+            foreach (var labelVariable in label.Variables)
+            {
+                Console.WriteLine(labelVariable);
+                labelVariables.Add(labelVariable.ToString());
+            }
+
+            foreach (var labelFunction in label.Functions)
+            {
+                Console.WriteLine(labelFunction);
+                labelFunctions.Add(labelFunction.ToString());
+            }
+            foreach (var labelObject in label.LabelObjects)
+            {
+                Console.WriteLine(labelObject);
+                labelObjects.Add(labelObject.ToString());
+            }
+
+            if (label.DataSets.Count == 1)
+            {
+                foreach (var datasetField in label.DataSets[0].Fields)
+                {
+                    Console.WriteLine(datasetField);
+                    labelDatasetFields.Add(datasetField.ToString());
+                }
+            }
+
+            return new NiceLabelLabel
+            {
+                LabelSettings = new NiceLabelLabelSettings
+                {
+                    Width = label.LabelSettings.Width,
+                    Height = label.LabelSettings.Height,
+                    OriginalPrinterName = label.LabelSettings.OriginalPrinterName,
+                    OriginalPrinterDriver = label.LabelSettings.OriginalPrinterDriver,
+                    PageLayout = new NiceLabelLabelPageLayout
+                    {
+                        MediaWidth = label.LabelSettings.PageLayout.MediaWidth,
+                        MediaHeight = label.LabelSettings.PageLayout.MediaHeight,
+                        Columns = label.LabelSettings.PageLayout.Columns,
+                        Rows = label.LabelSettings.PageLayout.Rows,
+                        HorizontalGap = label.LabelSettings.PageLayout.HorizontalGap,
+                        VerticalGap = label.LabelSettings.PageLayout.VerticalGap,
+                        HorizontalOffset = label.LabelSettings.PageLayout.HorizontalOffset,
+                        VerticalOffset = label.LabelSettings.PageLayout.VerticalOffset,
+                        HorizontalRadius = label.LabelSettings.PageLayout.HorizontalRadius,
+                        VerticalRadius = label.LabelSettings.PageLayout.VerticalRadius
+                    }
+                },
+                ConversionIssues = label.ConversionIssues.ToList(),
+                Variables = labelVariables,
+                Functions = labelFunctions,
+                LabelObjects = labelObjects,
+                DataSet = new NiceLabelDataSet
+                {
+                    IsFileDatabase = label.DataSets[0].IsFileDatabase,
+                    FileDatabaseFileName = label.DataSets[0].FileDatabaseFileName,
+                    ConnectionString = label.DataSets[0].ConnectionString,
+                    TableName = label.DataSets[0].TableName,
+                    IsCustomSql = label.DataSets[0].IsCustomSql,
+                    CustomSql = label.DataSets[0].CustomSql,
+                    Fields = labelDatasetFields
+                },
+                FilePath = label.FilePath,
+                Author = label.Author,
+                Title = label.Title
+            };
         }
     }
 }
