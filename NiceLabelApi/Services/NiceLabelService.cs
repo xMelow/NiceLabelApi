@@ -59,5 +59,10 @@ namespace NiceLabelApi.Services
         {
             _engine.PrintLabelBatch(labels, variables, printerSettings, printerName);
         }
+
+        public NiceLabelLabel GetLabelDetails(Stream label)
+        {
+            return _engine.GetLabelDetails(label);
+        }
     }
 }

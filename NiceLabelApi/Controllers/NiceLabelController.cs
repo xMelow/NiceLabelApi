@@ -230,6 +230,26 @@ namespace NiceLabelApi.Controllers
             return Ok(_labelService.GetPrinters());
         }
         
+        [HttpGet]
+        [Route("getLabelDetails")]
+        public async Task<IHttpActionResult> GetLabelDetails()
+        {
+            try
+            {
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var label = await GetRequiredStream(provider, "label");
+                var labelDetails = _labelService.GetLabelDetails(label);
+
+                return Ok(labelDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+        
         private async Task<T> GetRequiredParameter<T>(MultipartMemoryStreamProvider provider, string paramName)
         {
             var paramContent = GetParameterContent(provider, paramName);

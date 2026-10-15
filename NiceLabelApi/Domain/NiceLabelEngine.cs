@@ -169,5 +169,10 @@ namespace NiceLabelApi.Domain
                 label.Print(1);
             }
         }
+        
+        public NiceLabelLabel GetLabelDetails(Stream label)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -16,5 +16,6 @@ namespace NiceLabelApi.Services
         void PrintLabelWithSettings(Stream label,  Dictionary<string, string> labelVariables, Dictionary<string, string> printSettings, string printerName);
         void PrintToPdf(List<Stream> labels, Dictionary<string, string> variables, string outputFileName, bool appendToFile);
         void PrintLabelBatch(List<Stream> labels, Dictionary<string, string> variables, Dictionary<string, string> printerSettings, string printerName);
+        NiceLabelLabel GetLabelDetails(Stream label);
     }
 }
